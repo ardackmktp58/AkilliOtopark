@@ -1,0 +1,169 @@
+#include<Servo.h>
+
+#include <LiquidCrystal.h>
+
+
+//               (Rs, E, D4, D5, D6 ,D7)
+LiquidCrystal lcd(13 , 12, 11 , 10 , 9 , 8);
+Servo giris;
+Servo cikis;
+
+const byte giris_pini =  A5;
+const byte cikis_pini =  A4;
+
+
+int arac=0;
+int gir;
+int cik;
+void setup()
+{
+  Serial.begin(9600);
+  
+  lcd.begin(16, 2);
+  giris.attach(6);
+  cikis.attach(5);
+
+ 
+ giris.write(90);
+ cikis.write(0);
+  delay(1500);
+  lcd.clear();
+  lcd.setCursor (0, 0);
+  lcd.println("    OTOPARK     ");
+  lcd.setCursor (0, 1);
+  lcd.println("   UYGULAMASI   ");
+  delay(2000);
+  
+ giris.write(0);
+ cikis.write(90);
+}
+
+void loop()
+{
+
+  gir = analogRead (giris_pini);
+  cik = analogRead (cikis_pini);
+ 
+Serial.print(" gir ");Serial.print(gir);
+Serial.print("  cik  ");Serial.print(cik);
+
+
+
+
+{
+  
+lcd.setCursor (0, 0);
+lcd.print("AKILLI OTOPARK ");
+  lcd.setCursor (0, 1);
+lcd.print("Icerdeki Arac= ");
+lcd.print(arac);lcd.print(" ");
+
+}
+
+if(arac < 6)
+{
+  
+lcd.setCursor (0, 0);
+lcd.print("AKILLI OTOPARK ");
+  lcd.setCursor (0, 1);
+lcd.print("Icerdeki Arac= ");
+lcd.print(arac);lcd.print(" ");
+
+ 
+}
+if(gir < 500)
+{
+
+
+if(arac == 0)
+{
+  lcd.setCursor (0, 0);
+lcd.print(" AKILLI OTOPARK ");
+  lcd.setCursor (0, 1);
+lcd.print("ICERDE ARABA YOK");
+delay(1000);
+}
+
+
+
+
+ if (arac > 0)
+{
+arac=arac-1;
+
+  lcd.setCursor (0, 0);
+lcd.print("  Arac CIKIYOR  ");
+  lcd.setCursor (0, 1);
+lcd.print("Icerdeki Arac= ");
+lcd.print(arac);lcd.print(" ");
+ cikis.write(0);
+ delay(100);
+ 
+
+
+
+while (gir < 500)
+{
+ 
+  gir = analogRead (giris_pini);
+delay(50);
+}
+delay(3000);
+
+ cikis.write(90);
+
+} 
+
+
+}
+
+
+//-------------------------------------------------
+if(cik <500)
+{
+
+if(arac > 5)
+{
+  lcd.setCursor (0, 0);
+lcd.print("   Arac Geldi   ");
+  lcd.setCursor (0, 1);
+lcd.print("  OTOPARK DOLU  ");
+delay(1000);
+}
+
+
+
+
+else if(arac <6)
+{
+  
+arac=arac+1;
+ 
+  lcd.setCursor (0, 0);
+lcd.print("Arac Geldi      ");
+  lcd.setCursor (0, 1);
+lcd.print("Icerdeki Arac= ");
+lcd.print(arac);lcd.print(" ");
+ giris.write(90);
+ delay(100);
+ 
+
+
+
+while (cik < 500)
+{
+
+  cik = analogRead (cikis_pini);
+delay(50);
+}
+delay(3000);
+
+ giris.write(0);
+
+} 
+
+}
+
+
+
+}
